@@ -24,7 +24,13 @@ service.interceptors.response.use(
     }
   },
   error => {
-    Message.error(error.message)
+    if (error.request.status === 401) {
+      Message.error('登录已失效,请重新登录')
+      store.dispatch('user/logout')
+      this.$router.push('/login')
+    } else {
+      Message.error(error.message)
+    }
     return Promise.reject(error)
   }
 )

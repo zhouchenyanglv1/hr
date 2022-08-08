@@ -33,7 +33,7 @@ const actions = {
     context.commit('setUserInfo', infoObj)
     return infoObj
   },
-  loginOut(context) {
+  logout(context) {
     context.commit('removeToken')
     context.commit('removeUserInfo')
   }
