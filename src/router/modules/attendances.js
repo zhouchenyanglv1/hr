@@ -8,7 +8,8 @@ export default {
       path: '',
       component: () => import('@/views/attendances'),
       meta: {
-        title: '考勤'
+        title: '考勤',
+        icon: 'skill'
       } // 路由原信息  可以放任何内容
     }
   ]

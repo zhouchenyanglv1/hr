@@ -8,7 +8,8 @@ export default {
       path: '',
       component: () => import('@/views/employees'),
       meta: {
-        title: '员工'
+        title: '员工',
+        icon: 'people'
       } // 路由原信息  可以放任何内容
     }
   ]
