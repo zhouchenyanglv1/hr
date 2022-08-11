@@ -26,7 +26,7 @@
 export default {
   props: {
     isRoot: {
-      required: true,
+      default: false,
       type: Boolean
     },
     treenode: {

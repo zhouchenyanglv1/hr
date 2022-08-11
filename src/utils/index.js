@@ -115,3 +115,36 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+export function transListToTreeData(array, rootValue) {
+  // const newArr = []
+  // array.forEach(obj => {
+  //   const newObj = { ...obj, children: [] }
+  //   newArr.push(newObj)
+  // })
+  // const newArr2 = []
+  // newArr.forEach(obj => {
+  //   if (obj.pid === '') {
+  //     newArr2.push(obj)
+  //   }
+  // })
+  // newArr2.forEach((obj, index) => {
+  //   newArr.forEach(obj2 => {
+  //     if (obj2.pid === obj.id) {
+  //       newArr2[index].children.push(obj2)
+  //     }
+  //   })
+  // })
+  // return newArr2
+  const newArr = []
+  array.forEach(item => {
+    if (item.pid === rootValue) {
+      const children = transListToTreeData(array, item.id)
+      if (children.length) {
+        item.children = children
+      }
+      newArr.push(item)
+    }
+  })
+  return newArr
+}
