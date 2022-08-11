@@ -9,7 +9,7 @@
 
         <!-- 组织列表 -->
         <el-tree :props="defaultProps" default-expand-all :data="departs">
-          <treetool slot-scope="{data}" :treenode="data" />
+          <treetool slot-scope="{data}" :treenode="data" @removeItem="getCompanyList" />
         </el-tree>
       </el-card>
     </div>

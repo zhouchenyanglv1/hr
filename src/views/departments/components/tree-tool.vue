@@ -11,7 +11,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>添加子部门</el-dropdown-item>
               <el-dropdown-item v-if="!isRoot">编辑部门</el-dropdown-item>
-              <el-dropdown-item v-if="!isRoot">删除部门</el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot" @click.native="remove(treenode.id)">删除部门</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-
+import { deleteCompanyListAPI } from '@/api/department'
 export default {
   props: {
     isRoot: {
@@ -32,6 +32,17 @@ export default {
     treenode: {
       required: true,
       type: Object
+    }
+  },
+  methods: {
+    remove(id) {
+      try {
+        deleteCompanyListAPI(id)
+        this.$message.success('删除部门成功')
+      } catch (error) {
+        this.$message.error('删除部门失败，请检查网络')
+      }
+      this.$emit('removeItem')
     }
   }
 }
