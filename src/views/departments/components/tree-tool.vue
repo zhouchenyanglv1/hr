@@ -9,7 +9,7 @@
           <el-dropdown>
             <span>操作  <i class="el-icon-arrow-down" /></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>添加子部门</el-dropdown-item>
+              <el-dropdown-item @click.native="add(treenode)">添加子部门</el-dropdown-item>
               <el-dropdown-item v-if="!isRoot">编辑部门</el-dropdown-item>
               <el-dropdown-item v-if="!isRoot" @click.native="remove(treenode.id)">删除部门</el-dropdown-item>
             </el-dropdown-menu>
@@ -18,7 +18,6 @@
       </el-row>
     </el-col>
   </el-row>
-
 </template>
 
 <script>
@@ -35,14 +34,21 @@ export default {
     }
   },
   methods: {
-    remove(id) {
+    async remove(id) {
       try {
-        deleteCompanyListAPI(id)
-        this.$message.success('删除部门成功')
+        await deleteCompanyListAPI(id)
+        if (Promise.reject.error) {
+          return
+        } else {
+          this.$message.success('删除部门成功')
+          this.$emit('removeItem')
+        }
       } catch (error) {
-        this.$message.error('删除部门失败，请检查网络')
+        this.$message.error('删除部门失败')
       }
-      this.$emit('removeItem')
+    },
+    add(obj) {
+      this.$emit('openDialog', obj)
     }
   }
 }

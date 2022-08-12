@@ -5,14 +5,15 @@
       <el-card v-loading="loading" class="tree-card">
         <!-- 头部内容 -->
 
-        <treetool :treenode="company" :is-root="true" />
+        <treetool :treenode="company" :is-root="true" @openDialog="openDialog" />
 
         <!-- 组织列表 -->
         <el-tree :props="defaultProps" default-expand-all :data="departs">
-          <treetool slot-scope="{data}" :treenode="data" @removeItem="getCompanyList" />
+          <treetool slot-scope="{data}" :treenode="data" @removeItem="getCompanyList" @openDialog="openDialog" />
         </el-tree>
       </el-card>
     </div>
+    <addDept :show-dialog="showDialog" :tree-node="node" @closeDialog="closeDialog" />
   </div>
 </template>
 
@@ -20,9 +21,11 @@
 import treetool from './components/tree-tool.vue'
 import { getCompanyListAPI } from '@/api/department'
 import { transListToTreeData } from '@/utils/index'
+import addDept from './components/addDept.vue'
 export default {
   components: {
-    treetool
+    treetool,
+    addDept
   },
   data() {
     return {
@@ -34,7 +37,9 @@ export default {
       titleDropList: ['添加子部门'],
       containDropList: ['添加子部门', '编辑部门', ' 删除部门'],
       company: { name: '', manager: '负责人' },
-      loading: true
+      loading: true,
+      showDialog: false,
+      node: {}
     }
   },
   created() {
@@ -59,6 +64,13 @@ export default {
         this.$message.error('获取部门列表失败，请检查网络')
       }
       this.loading = false
+    },
+    openDialog(obj) {
+      this.showDialog = true
+      this.node = obj
+    },
+    closeDialog() {
+      this.showDialog = false
     }
   }
 }
