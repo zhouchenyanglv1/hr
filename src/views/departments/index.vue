@@ -13,7 +13,7 @@
         </el-tree>
       </el-card>
     </div>
-    <addDept :show-dialog="showDialog" :tree-node="node" @closeDialog="closeDialog" />
+    <addDept :show-dialog="showDialog" :tree-node="node" :is-edit="isEdit" @closeDialog="closeDialog" @refresh="getCompanyList" />
   </div>
 </template>
 
@@ -39,7 +39,8 @@ export default {
       company: { name: '', manager: '负责人' },
       loading: true,
       showDialog: false,
-      node: {}
+      node: {},
+      isEdit: false
     }
   },
   created() {
@@ -65,9 +66,10 @@ export default {
       }
       this.loading = false
     },
-    openDialog(obj) {
+    openDialog(obj, torf) {
       this.showDialog = true
       this.node = obj
+      this.isEdit = torf
     },
     closeDialog() {
       this.showDialog = false

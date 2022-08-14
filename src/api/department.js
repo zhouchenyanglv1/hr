@@ -20,3 +20,11 @@ export function addCompanyListAPI(data) {
     data
   })
 }
+
+export function editCompanyListAPI(id, data) {
+  return request({
+    url: `/company/department/${id}`,
+    method: 'PUT',
+    data
+  })
+}
