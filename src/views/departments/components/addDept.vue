@@ -58,20 +58,24 @@ export default {
   },
   data() {
     const checkDepartmentName = async(rule, value, callback) => {
+      const { depts } = await getCompanyListAPI()
+      let isRepeat = false
       if (this.isEdit === true) {
-        const { depts } = await getCompanyListAPI()
-        const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
-        isRepeat ? callback(new Error(`同级目录下已经存在${value}部门`)) : callback()
+        isRepeat = depts.filter(item => item.pid === this.treeNode.pid && item.id !== this.treeNode.id).some(item => item.name === value)
       } else {
-        const { depts } = await getCompanyListAPI()
-        const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
-        isRepeat ? callback(new Error(`同级目录下已经存在${value}部门`)) : callback()
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
       }
+      isRepeat ? callback(new Error(`同级目录下已经存在${value}部门`)) : callback()
     }
     const checkDepartmentCode = async(rule, value, callback) => {
       const { depts } = await getCompanyListAPI()
-      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.code === value)
-      isRepeat ? callback(new Error(`同级目录下已经存在${value}部门`)) : callback()
+      let isRepeat = false
+      if (this.isEdit === true) {
+        isRepeat = depts.filter(item => item.pid === this.treeNode.pid && item.id !== this.treeNode.id).some(item => item.code === value)
+      } else {
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.code === value)
+      }
+      isRepeat ? callback(new Error(`组织架构下已经存在${value}编码`)) : callback()
     }
     return {
       formData: {
