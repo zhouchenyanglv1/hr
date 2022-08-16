@@ -55,7 +55,6 @@ export default {
         console.log(res.depts)
         depart.splice(0, 1)
         const departList = transListToTreeData(depart, '')
-        console.log(departList)
         this.departs = departList
         this.$message({
           message: '获取部门列表成功',

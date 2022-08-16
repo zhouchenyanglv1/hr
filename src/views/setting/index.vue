@@ -5,9 +5,9 @@
         <el-tabs v-model="activeTag">
           <el-tab-pane label="角色管理" name="first">
             <div class="charactorBox">
-              <el-button type="primary" size="mini" icon="el-icon-plus" style="margin-bottom:15px">新增角色</el-button>
+              <el-button type="primary" size="mini" icon="el-icon-plus" style="margin-bottom:15px" @click="addCharactor">新增角色</el-button>
               <!-- 员工列表组件 -->
-              <charactor-list :info="charactor" />
+              <charactor-list ref="charactorList" :info="charactor" @refresh="getCharactorList()" />
               <!-- 分页组件 -->
               <el-row style="float:right;margin-top:10px">
                 <el-pagination
@@ -35,16 +35,16 @@
                 <el-input v-model="companyInfo.name" />
               </el-form-item>
               <el-form-item label="公司地址" style="width:400px">
-                <el-input v-model="companyInfo.address" />
+                <el-input v-model="companyInfo.companyAddress" />
               </el-form-item>
               <el-form-item label="公司电话" style="width:400px">
-                <el-input v-model="companyInfo.phone" />
+                <el-input v-model="companyInfo.companyPhone" />
               </el-form-item>
               <el-form-item label="邮箱" style="width:400px">
-                <el-input v-model="companyInfo.email" />
+                <el-input v-model="companyInfo.mailbox" />
               </el-form-item>
               <el-form-item label="备注" style="width:400px">
-                <el-input v-model="companyInfo.textarea" type="textarea" resize="none" />
+                <el-input v-model="companyInfo.remarks" type="textarea" resize="none" />
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -56,8 +56,10 @@
 
 <script>
 import charactorList from './departments/charactorList.vue'
-import { getCharactorListAPI } from '@/api/setting'
+import { getCharactorListAPI, getCompanyInfoAPI } from '@/api/setting'
+import { mapGetters } from 'vuex'
 export default {
+
   components: {
     charactorList
   },
@@ -65,11 +67,7 @@ export default {
     return {
       activeTag: 'first',
       companyInfo: {
-        name: '',
-        address: '',
-        phone: '',
-        email: '',
-        textarea: ''
+
       },
       page: {
         page: 1,
@@ -80,8 +78,12 @@ export default {
 
     }
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   created() {
     this.getCharactorList()
+    this.getCompanyInfo()
   },
   methods: {
     async getCharactorList() {
@@ -93,6 +95,14 @@ export default {
     async changePage(val) {
       this.page.page = val
       this.getCharactorList()
+    },
+    async getCompanyInfo() {
+      const res = await getCompanyInfoAPI(this.userInfo.companyId)
+      console.log(res)
+      this.companyInfo = res
+    },
+    addCharactor() {
+      this.$refs.charactorList.add()
     }
   }
 
