@@ -71,7 +71,7 @@ export default {
       },
       page: {
         page: 1,
-        pagesize: 5,
+        pagesize: 10,
         total: 1
       },
       charactor: []
@@ -87,8 +87,11 @@ export default {
   },
   methods: {
     async getCharactorList() {
-      const res = await getCharactorListAPI(this.page)
+      const data = { page: this.page.page, pagesize: this.page.pagesize }
+      console.log(data)
+      const res = await getCharactorListAPI(data)
       console.log(res)
+
       this.page.total = res.total
       this.charactor = res.rows
     },

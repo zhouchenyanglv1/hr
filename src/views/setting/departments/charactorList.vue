@@ -94,12 +94,13 @@ export default {
       const id = this.info[index].id
       try {
         await this.$confirm('确认要删除吗？')
-        delCharactorAPI(id)
+        await delCharactorAPI(id)
         this.$emit('refresh')
-        this.$message.success('删除角色成功')
       } catch (error) {
-        console.log(error)
+        console.log(error.message)
+        return
       }
+      this.$message.success('删除角色成功')
     },
     async edit(index) {
       this.isEdit = true
@@ -113,10 +114,11 @@ export default {
       this.charactorInfo.description = ''
     },
     async  sendUpdate() {
-      // const addData = { name: this.charactorInfo.name, region: this.charactorInfo.description }
-      const res = await this.isEdit === true ? updateCharactorAPI(this.charactorInfo) : addCharactorAPI(this.charactorInfo)
-      console.log(res)
+      const addData = { name: this.charactorInfo.name, description: this.charactorInfo.description }
+      const editData = { name: this.charactorInfo.name, description: this.charactorInfo.description, id: this.charactorInfo.id }
+      await this.isEdit === true ? updateCharactorAPI(editData) : addCharactorAPI(addData)
       this.closeDialog()
+      this.$emit('refresh')
     },
     add() {
       this.isEdit = false
