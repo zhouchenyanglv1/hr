@@ -19,3 +19,11 @@ export function delEmployeesAPI(id) {
     method: 'DELETE'
   })
 }
+
+export function addEmployeesAPI(data) {
+  return request({
+    url: '/sys/user',
+    method: 'POST',
+    data
+  })
+}

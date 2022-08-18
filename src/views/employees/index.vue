@@ -16,7 +16,9 @@ username<template>
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formOfEmployment" />
           <el-table-column label="部门" sortable="" prop="departmentName" />
-          <el-table-column label="入职时间" sortable="" prop="timeOfEntry" />
+          <el-table-column label="入职时间" sortable="" prop="timeOfEntry">
+            <template slot-scope="scope"> {{ scope.row.timeOfEntry | formatDate }}</template>
+          </el-table-column>
           <el-table-column label="账户状态" sortable="">正常</el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template slot-scope="scope">
@@ -35,7 +37,7 @@ username<template>
         </el-row>
       </el-card>
       <!-- 员工信息弹层 -->
-      <add-employees :show-dialog="showDialog" @close="closeDialog()" />
+      <add-employees :show-dialog="showDialog" @close="closeDialog()" @refresh="getEmployeesList()" />
     </div>
   </div>
 </template>

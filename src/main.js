@@ -10,7 +10,7 @@ import component from './components'
 import App from './App'
 import store from './store'
 import router from './router'
-
+import * as filters from '@/filters'
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -39,4 +39,8 @@ new Vue({
   router,
   store,
   render: h => h(App)
+})
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
 })
