@@ -27,3 +27,11 @@ export function addEmployeesAPI(data) {
     data
   })
 }
+
+export function importExcelEmployeesAPI(data) {
+  return request({
+    url: '/sys/user/batch',
+    method: 'POST',
+    data
+  })
+}

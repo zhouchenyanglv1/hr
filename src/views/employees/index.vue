@@ -4,8 +4,8 @@ username<template>
       <!-- 引入pagetools组件 -->
       <pagetools :show-left="true">
         <span slot="before">共{{ page.total }}条数据</span>
-        <el-button slot="after" type="success" size="small">EXCEL导入</el-button>
-        <el-button slot="after" type="danger" size="small">EXCEL导出</el-button>
+        <el-button slot="after" type="success" size="small" @click="jumpToImportExcel">EXCEL导入</el-button>
+        <el-button slot="after" type="danger" size="small" @click="exportExcel">EXCEL导出</el-button>
         <el-button slot="after" type="primary" size="small" @click="addNewEmployees()">新增员工</el-button>
       </pagetools>
       <!-- 员工列表 -->
@@ -97,6 +97,34 @@ export default {
     },
     closeDialog() {
       this.showDialog = false
+    },
+    jumpToImportExcel() {
+      this.$router.push('/import')
+    },
+    exportExcel() {
+      const headers = {
+        '手机号': 'mobile',
+        '姓名': 'username',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+
+      const header = ['手机号', '姓名', '入职日期', '聘用形式', '转正日期', '工号', '部门']
+      const results = []
+      this.employeesList.forEach(item => {
+        results.push(Object.values(item))
+      })
+      console.log(results)
+      import('@/vendor/Export2Excel').then(excel => {
+        excel.export_json_to_excel({
+          header: ['gg', 'ggg'],
+          data: ['gdg', 'dfgdf'],
+          filename: '员工列表'
+        })
+      })
     }
   }
 }
