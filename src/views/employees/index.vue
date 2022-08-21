@@ -22,7 +22,7 @@ username<template>
           <el-table-column label="账户状态" sortable="">正常</el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template slot-scope="scope">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button type="text" size="small" @click="jumpToDetail(scope.row)">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
@@ -113,18 +113,43 @@ export default {
       }
 
       const header = ['手机号', '姓名', '入职日期', '聘用形式', '转正日期', '工号', '部门']
-      const results = []
+      const result = []
       this.employeesList.forEach(item => {
-        results.push(Object.values(item))
+        const arr = []
+        const key1 = Object.values(headers)
+        const key2 = Object.keys(item)
+        const key3 = Object.values(item)
+        key1.forEach(obj1 => {
+          const arr2 = []
+          key2.forEach(obj2 => {
+            if (obj2 === obj1) {
+              if (obj2 === 'formOfEmployment') {
+                if (key3[key2.indexOf(obj2)] === 1) {
+                  arr2.push('正式')
+                } else if (key3[key2.indexOf(obj2)] === 2) {
+                  arr2.push('非正式')
+                } else {
+                  arr2.push(key3[key2.indexOf(obj2)])
+                }
+                return
+              }
+              arr2.push(key3[key2.indexOf(obj2)])
+            }
+          })
+          arr[key1.indexOf(obj1)] = arr2
+        })
+        result.push(arr)
       })
-      console.log(results)
       import('@/vendor/Export2Excel').then(excel => {
         excel.export_json_to_excel({
-          header: ['gg', 'ggg'],
-          data: ['gdg', 'dfgdf'],
+          header: header,
+          data: result,
           filename: '员工列表'
         })
       })
+    },
+    jumpToDetail(row) {
+      this.$router.push(`/employees/detail/${row.id}`)
     }
   }
 }

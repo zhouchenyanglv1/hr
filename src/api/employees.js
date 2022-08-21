@@ -35,3 +35,31 @@ export function importExcelEmployeesAPI(data) {
     data
   })
 }
+
+export function getUserDetalByIdAPI(id) {
+  return request({
+    url: `/sys/user/${id}`,
+    method: 'get'
+  })
+}
+
+export function saveUserDetailAPI(data) {
+  return request({
+    url: `/sys/user/${data.id}`,
+    method: 'put',
+    data
+  })
+}
+
+export function getPersonalInfoByIdAPI(id) {
+  return request({
+    url: `/employees/${id}/personalInfo`
+  })
+}
+
+export function updatePersonalInfoByIdAPI(data) {
+  return request({
+    url: `/employees/${data.userId}/personalInfo`,
+    method: 'PUT'
+  })
+}

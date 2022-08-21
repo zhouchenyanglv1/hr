@@ -11,6 +11,12 @@ export default {
         title: '员工',
         icon: 'people'
       } // 路由原信息  可以放任何内容
+    },
+    {
+      path: '/employees/detail/:id',
+      component: () => import('@/views/employees/detail'),
+      hidden: true,
+      props: true
     }
   ]
 
