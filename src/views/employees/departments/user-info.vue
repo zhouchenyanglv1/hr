@@ -58,7 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-
+            <imageUpload />
           </el-form-item>
         </el-col>
       </el-row>
@@ -285,9 +285,11 @@
 <script>
 import EmployeeEnum from '@/api/constant/employees'
 import { getPersonalInfoByIdAPI, updatePersonalInfoByIdAPI, getUserDetalByIdAPI, saveUserDetailAPI } from '@/api/employees'
-
+import imageUpload from '@/components/imageUpload'
 export default {
-
+  components: {
+    imageUpload
+  },
   data() {
     return {
       userId: this.$route.params.id,
