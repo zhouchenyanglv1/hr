@@ -13,7 +13,9 @@
       :class="{ disabled : fileLength }"
     >
       <i class="el-icon-plus" />
+
     </el-upload>
+    <el-progress v-if="showPercent" :percentage="percent" style="width:180px" />
     <el-dialog :visible="showDialog" title="图片预览" type="flex" justify="center" @close="closeDialog()">
       <img :src="imgUrl" alt="" style="width:100%">
     </el-dialog>
@@ -34,13 +36,18 @@ export default {
       showDialog: false,
       imgUrl: '',
       userId: this.$route.params.id,
-      currentUid: ''
+      currentUid: '',
+      percent: 0,
+      showPercent: false
     }
   },
   computed: {
     fileLength() {
       return this.fileList.length === 1
     }
+  },
+  created() {
+
   },
   methods: {
     preview(file) {
@@ -59,6 +66,7 @@ export default {
     },
     beforeUpload(file) {
       console.log(file)
+      console.log(this.fileList)
       const type = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/bmp']
       if (!type.some(item => item === file.type)) {
         this.$message.error('上传的图片格式错误')
@@ -70,6 +78,7 @@ export default {
         return false
       }
       this.currentUid = file.uid
+      this.showPercent = true
       return true
     },
 
@@ -80,25 +89,35 @@ export default {
           Region: 'ap-shanghai',
           Key: params.file.name,
           Body: params.file,
-          StorageClass: 'STANDARD'
+          StorageClass: 'STANDARD',
+          onProgress: (params) => {
+            this.percent = params.percent * 100
+          }
         },
-        function(error, data) {
+        (error, data) => {
           console.log(error)
           if (data.statusCode === 200) {
             console.log(data.Location)
             const url1 = 'http://' + data.Location
+            // this.$emit('sendPhotoUrl', url1)
+
             this.fileList = this.fileList.map(item => {
               if (item.uid === this.currentUid) {
                 return { url: url1, upload: true }
               }
               return item
             })
+            setTimeout(() => {
+              this.showPercent = false
+              this.percent = 0
+            }, 1500)
           }
         }
 
         )
       }
     }
+
   }
 }
 </script>

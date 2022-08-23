@@ -13,6 +13,11 @@ username<template>
         <el-table border :data="employeesList">
           <el-table-column label="序号" sortable="" type="index" />
           <el-table-column label="姓名" sortable="" prop="username" />
+          <el-table-column label="头像" align="center">
+            <template v-slot="{row}">
+              <img ref="staffImage" :src="row.staffPhoto" alt="" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px" @error="imageError" @click="showQrCode(row.staffPhoto)">
+            </template>
+          </el-table-column>
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formOfEmployment" />
           <el-table-column label="部门" sortable="" prop="departmentName" />
@@ -38,20 +43,30 @@ username<template>
       </el-card>
       <!-- 员工信息弹层 -->
       <add-employees :show-dialog="showDialog" @close="closeDialog()" @refresh="getEmployeesList()" />
+      <!-- 二维码弹层 -->
+      <el-dialog title="二维码" :visible.sync="showCodeDialog">
+        <el-row type="flex" justify="center">
+          <canvas ref="myCanvas" />
+        </el-row>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import qrCode from 'qrcode'
 import { getEmployeesListAPI, delEmployeesAPI } from '@/api/employees'
 import employeesEnum from '@/api/constant/employees'
 import addEmployees from './departments/addEmployees.vue'
+import errorImage from '@/assets/common/head.jpg'
 export default {
   components: {
     addEmployees
   },
   data() {
     return {
+      imgUrl: '',
+      showCodeDialog: false,
       employeesList: [],
       page: {
         page: 1,
@@ -150,6 +165,19 @@ export default {
     },
     jumpToDetail(row) {
       this.$router.push(`/employees/detail/${row.id}`)
+    },
+    imageError(e) {
+      e.target.src = errorImage
+    },
+    async showQrCode(url) {
+      if (url) {
+        this.showCodeDialog = true
+        this.$nextTick(() => {
+          qrCode.toCanvas(this.$refs.myCanvas, url)
+        })
+      } else {
+        this.$message.error('该用户未上传头像')
+      }
     }
   }
 }

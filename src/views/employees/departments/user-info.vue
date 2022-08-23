@@ -58,7 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-            <imageUpload />
+            <imageUpload ref="staffPhoto" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -368,6 +368,9 @@ export default {
   methods: {
     async getUserDetalById() {
       this.userInfo = await getUserDetalByIdAPI(this.userId)
+      if (this.userInfo.staffPhoto) {
+        this.$refs.staffPhoto.fileList = [{ url: this.userInfo.staffPhoto, upload: true }]
+      }
     },
     async getPersonalInfoById() {
       this.formData = await getPersonalInfoByIdAPI(this.userId)
@@ -375,7 +378,12 @@ export default {
     },
     async saveUser() {
       try {
-        await saveUserDetailAPI(this.userInfo)
+        const fileList = this.$refs.staffPhoto.fileList
+        if (fileList.some(item => !item.upload)) {
+          this.$message.error('图片未上传完成')
+          return
+        }
+        await saveUserDetailAPI({ ...this.userInfo, staffPhoto: fileList.length ? fileList[0].url : ' ' })
         this.$message.success('保存信息成功')
       } catch (error) {
         console.log(error)
