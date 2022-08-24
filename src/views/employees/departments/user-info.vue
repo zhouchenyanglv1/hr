@@ -1,5 +1,12 @@
 <template>
   <div class="user-info">
+    <el-row type="flex" justify="end">
+      <el-tooltip content="打印个人基本信息">
+        <router-link :to="`/print/${userId}?type=personal`">
+          <i class="el-icon-printer" />
+        </router-link>
+      </el-tooltip>
+    </el-row>
     <!-- 个人信息 -->
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
@@ -286,6 +293,7 @@
 import EmployeeEnum from '@/api/constant/employees'
 import { getPersonalInfoByIdAPI, updatePersonalInfoByIdAPI, getUserDetalByIdAPI, saveUserDetailAPI } from '@/api/employees'
 import imageUpload from '@/components/imageUpload'
+
 export default {
   components: {
     imageUpload
@@ -393,6 +401,9 @@ export default {
       const data = this.formData
       const res = await updatePersonalInfoByIdAPI(data)
       console.log(res)
+    },
+    goPrint() {
+      this.$router.push(`/print/${this.userId}?type=personal`)
     }
   }
 

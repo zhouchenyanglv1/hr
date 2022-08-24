@@ -63,3 +63,24 @@ export function updatePersonalInfoByIdAPI(data) {
     method: 'PUT'
   })
 }
+
+export function getJobInfoByIdAPI(id) {
+  return request({
+    url: `/employees/${id}/jobs`
+  })
+}
+
+export function updateJobInfoByIdAPI(data) {
+  return request({
+    url: `/employees/${data.id}/jobs`,
+    method: 'PUT'
+  })
+}
+
+export function updateUserAssignAPI(data) {
+  return request({
+    url: '/sys/user/assignRoles',
+    method: 'PUT',
+    data
+  })
+}

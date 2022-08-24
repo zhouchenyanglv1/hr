@@ -31,7 +31,7 @@ username<template>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="openRollDialog(scope.row)">角色</el-button>
               <el-button type="text" size="small" @click="del(scope.$index)">删除</el-button>
             </template>
           </el-table-column>
@@ -49,6 +49,8 @@ username<template>
           <canvas ref="myCanvas" />
         </el-row>
       </el-dialog>
+      <!-- 角色弹层 -->
+      <assignRoll ref="rollDialog" :show-roll-dialog="showRollDialog" :user-id="rollUserId" @close="showRollDialog=false" />
     </div>
   </div>
 </template>
@@ -59,13 +61,16 @@ import { getEmployeesListAPI, delEmployeesAPI } from '@/api/employees'
 import employeesEnum from '@/api/constant/employees'
 import addEmployees from './departments/addEmployees.vue'
 import errorImage from '@/assets/common/head.jpg'
+import assignRoll from './departments/assign-roll.vue'
 export default {
   components: {
-    addEmployees
+    addEmployees,
+    assignRoll
   },
   data() {
     return {
-      imgUrl: '',
+      showRollDialog: false,
+      errImgUrl: [],
       showCodeDialog: false,
       employeesList: [],
       page: {
@@ -73,19 +78,24 @@ export default {
         pagesize: 10,
         total: 1
       },
-      showDialog: false
+      showDialog: false,
+      rollUserId: ''
     }
   },
   created() {
     this.getEmployeesList()
   },
   methods: {
+    async openRollDialog(row) {
+      this.rollUserId = row.id
+      await this.$refs.rollDialog.getUserDetalById(row.id)
+      this.showRollDialog = true
+    },
     async getEmployeesList() {
       const data = { page: this.page.page, pagesize: this.page.pagesize }
       const res = await getEmployeesListAPI(data)
       this.employeesList = res.rows
       this.page.total = res.total
-      console.log(res)
     },
     changePage(val) {
       this.page.page = val
@@ -167,10 +177,12 @@ export default {
       this.$router.push(`/employees/detail/${row.id}`)
     },
     imageError(e) {
+      this.errImgUrl.push(e.target.src)
       e.target.src = errorImage
     },
     async showQrCode(url) {
-      if (url) {
+      // console.log(this.errImgUrl.some(item => item === url))
+      if (this.errImgUrl.some(item => item === url) === false) {
         this.showCodeDialog = true
         this.$nextTick(() => {
           qrCode.toCanvas(this.$refs.myCanvas, url)
