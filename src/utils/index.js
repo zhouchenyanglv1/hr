@@ -138,10 +138,12 @@ export function transListToTreeData(array, rootValue) {
   // return newArr2
   const newArr = []
   array.forEach(item => {
+    // item = { ...item, hasChildren: false }
     if (item.pid === rootValue) {
       const children = transListToTreeData(array, item.id)
       if (children.length) {
         item.children = children
+        // item.hasChildren = true
       }
       newArr.push(item)
     }
