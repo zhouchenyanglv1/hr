@@ -155,14 +155,20 @@ export default {
       console.log(res)
     },
     send() {
-      this.isEdit === false ? this.addPermission() : this.updatePermission()
-      this.editData = this.formData2
-      this.switchOn = 0
-      this.$refs.formData.resetFields()
-      this.isAddBig = false
-      this.showDialog = false
-      this.isEdit === false ? this.$message.success('新增成功') : this.$message.success('编辑成功')
-      this.getPermissionList()
+      this.$refs.formData.validate(async isOk => {
+        if (isOk) {
+          this.isEdit === false ? await this.addPermission() : await this.updatePermission()
+          this.editData = this.formData2
+          this.switchOn = 0
+          this.$refs.formData.resetFields()
+          this.isAddBig = false
+          this.showDialog = false
+          this.isEdit === false ? this.$message.success('新增成功') : this.$message.success('编辑成功')
+          this.getPermissionList()
+        } else {
+          console.log(333)
+        }
+      })
     }
   }
 }
