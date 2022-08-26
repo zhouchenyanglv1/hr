@@ -181,7 +181,7 @@ export default {
       e.target.src = errorImage
     },
     async showQrCode(url) {
-      // console.log(this.errImgUrl.some(item => item === url))
+      console.log(this.errImgUrl.some(item => item === url))
       if (this.errImgUrl.some(item => item === url) === false) {
         this.showCodeDialog = true
         this.$nextTick(() => {
