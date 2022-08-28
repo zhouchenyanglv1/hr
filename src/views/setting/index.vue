@@ -50,6 +50,7 @@
           </el-tab-pane>
         </el-tabs>
       </el-card>
+
     </div>
   </div>
 </template>
@@ -88,7 +89,6 @@ export default {
   methods: {
     async getCharactorList() {
       const data = { page: this.page.page, pagesize: this.page.pagesize }
-      console.log(data)
       const res = await getCharactorListAPI(data)
       console.log(res)
 
@@ -101,7 +101,6 @@ export default {
     },
     async getCompanyInfo() {
       const res = await getCompanyInfoAPI(this.userInfo.companyId)
-      console.log(res)
       this.companyInfo = res
     },
     addCharactor() {

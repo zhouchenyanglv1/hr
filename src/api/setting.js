@@ -41,3 +41,11 @@ export function addCharactorAPI(data) {
     data
   })
 }
+
+export function putAssignPermissionAPI(data) {
+  return request({
+    url: '/sys/role/assignPrem',
+    method: 'PUT',
+    data
+  })
+}

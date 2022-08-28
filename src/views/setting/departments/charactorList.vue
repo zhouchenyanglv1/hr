@@ -30,7 +30,7 @@
       >
 
         <template slot-scope="scope">
-          <el-button size="mini" type="success">分配权限</el-button>
+          <el-button size="mini" type="success" @click="permission(scope.row)">分配权限</el-button>
           <el-button size="mini" type="primary" @click="edit(scope.$index)">编辑</el-button>
           <el-button ref="delButton" size="mini" type="danger" @click="del(scope.$index)">删除</el-button>
         </template>
@@ -56,11 +56,37 @@
         </el-col>
       </el-row>
     </el-dialog>
+
+    <!-- 分配权限弹窗 -->
+    <el-dialog :visible="showPerDialog" :title="`为${permTitle}分配权限`" @close="closePermission">
+      <el-form>
+
+        <el-tree
+          ref="tree"
+          :data="permData"
+          node-key="id"
+          :props="defaultProps"
+          show-checkbox
+          default-expand-all
+          :check-strictly="true"
+          :default-checked-keys="checkList"
+        />
+
+        <el-row type="flex" justify="center">
+          <el-col :span="6">
+            <el-button size="small" type="primary" @click.native="sendPermission">确定</el-button>
+            <el-button size="small" @click.native="closePermission">取消</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { delCharactorAPI, updateCharactorAPI, getCharactorInfoAPI, addCharactorAPI } from '@/api/setting'
+import { delCharactorAPI, updateCharactorAPI, getCharactorInfoAPI, addCharactorAPI, putAssignPermissionAPI } from '@/api/setting'
+import { getPermissionListAPI } from '@/api/permission'
+import { transListToTreeData } from '@/utils'
 
 export default {
   props: {
@@ -83,11 +109,21 @@ export default {
       },
       rules: {
         name: [{ required: true, message: '角色名字不能为空', trigger: 'blur' }]
-      }
+      },
+      showPerDialog: false,
+      permData: [],
+      defaultProps: { label: 'name' },
+      permTitle: '',
+      userId: null,
+      checkList: [],
+      checkedList: []
     }
   },
   updated() {
     this.propData = this.info
+  },
+  created() {
+
   },
   methods: {
     async del(index) {
@@ -123,6 +159,33 @@ export default {
     add() {
       this.isEdit = false
       this.showDialog = true
+    },
+    async permission(row) {
+      console.log(row)
+      this.userId = row.id
+      const check = await getCharactorInfoAPI(this.userId)
+      console.log(check.permIds)
+      this.checkList = check.permIds
+      this.permTitle = row.name
+      this.getPermissionList()
+      this.showPerDialog = true
+    },
+    closePermission() {
+      this.showPerDialog = false
+      this.checkList = []
+      this.checkedList = []
+    },
+    async getPermissionList() {
+      const res = await getPermissionListAPI()
+      const list = transListToTreeData(res, '0')
+      console.log(list)
+      this.permData = list
+    },
+    async sendPermission() {
+      this.checkedList = this.$refs.tree.getCheckedKeys()
+      await putAssignPermissionAPI({ id: this.userId, permIds: this.checkedList })
+      this.closePermission()
+      this.$message.success('更新权限成功')
     }
 
   }

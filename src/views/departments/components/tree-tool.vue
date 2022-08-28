@@ -9,7 +9,7 @@
           <el-dropdown>
             <span>操作  <i class="el-icon-arrow-down" /></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="add(treenode)">添加子部门</el-dropdown-item>
+              <el-dropdown-item :disabled="!checkPermission('add-department')" @click.native="add(treenode)">添加子部门</el-dropdown-item>
               <el-dropdown-item v-if="!isRoot" @click.native="edit(treenode)">编辑部门</el-dropdown-item>
               <el-dropdown-item v-if="!isRoot" @click.native="remove(treenode.id)">删除部门</el-dropdown-item>
             </el-dropdown-menu>
