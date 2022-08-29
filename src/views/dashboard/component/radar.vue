@@ -10,7 +10,7 @@ export default {
     const MyEchart = echarts.init(this.$refs.myDiv)
     MyEchart.setOption({
       title: {
-        text: 'Basic Radar Chart'
+        text: '能力表'
       },
       legend: {
         data: ['Allocated Budget', 'Actual Spending']
@@ -18,26 +18,22 @@ export default {
       radar: {
         // shape: 'circle',
         indicator: [
-          { name: 'Sales', max: 6500 },
-          { name: 'Administration', max: 16000 },
-          { name: 'Information Technology', max: 30000 },
-          { name: 'Customer Support', max: 38000 },
-          { name: 'Development', max: 52000 },
-          { name: 'Marketing', max: 25000 }
+          { name: '战斗力', max: 100 },
+          { name: '体力', max: 100 },
+          { name: '耐力', max: 100 },
+          { name: '精神力', max: 100 },
+          { name: '灵活性', max: 100 },
+          { name: '智力', max: 100 }
         ]
       },
       series: [
         {
-          name: 'Budget vs spending',
+          name: '能力属性',
           type: 'radar',
           data: [
             {
-              value: [4200, 3000, 20000, 35000, 50000, 18000],
-              name: 'Allocated Budget'
-            },
-            {
-              value: [5000, 14000, 28000, 26000, 42000, 21000],
-              name: 'Actual Spending'
+              value: [90, 80, 70, 50, 60, 80],
+              name: '能力'
             }
           ]
         }

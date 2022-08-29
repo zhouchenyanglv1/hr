@@ -73,7 +73,7 @@
             <span>流程申请</span>
           </div>
           <div class="sideNav">
-            <el-button class="sideBtn">加班离职</el-button>
+            <el-button class="sideBtn" @click="showLeaveDialog=true">加班离职</el-button>
             <el-button class="sideBtn">请假调休</el-button>
             <el-button class="sideBtn">审批列表</el-button>
             <el-button class="sideBtn">我的信息</el-button>
@@ -119,6 +119,25 @@
           </el-card>
         </el-card></el-col>
     </el-row>
+    <!-- 离职弹窗 -->
+    <el-dialog title="离职申请" :visible="showLeaveDialog" style="width:80%" @close="closeLeaveDialog">
+      <el-form>
+        <el-form-item label="离职时间">
+          <el-date-picker v-model="ruleForm.exceptTime" placeholder="请选择希望离职的时间..." value-format="yyyy-MM-DD" />
+        </el-form-item>
+        <!-- 离职原因 -->
+        <el-form-item label="离职原因">
+          <el-input v-model="ruleForm.reason" type="textarea" :rows="3" style="width:70%" placeholder="请输入原因..." />
+        </el-form-item>
+        <el-row type="flex" justify="center">
+          <el-col :span="6">
+            <el-button size="small" type="primary">确定</el-button>
+            <el-button size="small" @click="closeLeaveDialog">取消</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
+
+    </el-dialog>
   </div>
 </template>
 
@@ -132,10 +151,26 @@ export default {
     workCalendar,
     radar
   },
+  data() {
+    return {
+      showLeaveDialog: true,
+      ruleForm: {
+        exceptTime: '',
+        reason: '',
+        processKey: 'process_dimission', // 特定的审批
+        processName: '离职'
+      }
+    }
+  },
   computed: {
     ...mapGetters([
       'name', 'userInfo'
     ])
+  },
+  methods: {
+    closeLeaveDialog() {
+      this.showLeaveDialog = false
+    }
   }
 
 }
