@@ -123,7 +123,7 @@
     <el-dialog title="离职申请" :visible="showLeaveDialog" style="width:80%" @close="closeLeaveDialog">
       <el-form>
         <el-form-item label="离职时间">
-          <el-date-picker v-model="ruleForm.exceptTime" placeholder="请选择希望离职的时间..." value-format="yyyy-MM-DD" />
+          <el-date-picker v-model="ruleForm.exceptTime" placeholder="请选择希望离职的时间..." value-format="yyyy-MM-dd HH:mm:ss" />
         </el-form-item>
         <!-- 离职原因 -->
         <el-form-item label="离职原因">
@@ -131,7 +131,7 @@
         </el-form-item>
         <el-row type="flex" justify="center">
           <el-col :span="6">
-            <el-button size="small" type="primary">确定</el-button>
+            <el-button size="small" type="primary" @click="sendLeaveMessage">确定</el-button>
             <el-button size="small" @click="closeLeaveDialog">取消</el-button>
           </el-col>
         </el-row>
@@ -143,8 +143,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { startProcessAPI } from '@/api/dashboard'
 import workCalendar from './component/work-calendar.vue'
 import radar from './component/radar.vue'
+
 export default {
   name: 'Dashboard',
   components: {
@@ -153,7 +155,7 @@ export default {
   },
   data() {
     return {
-      showLeaveDialog: true,
+      showLeaveDialog: false,
       ruleForm: {
         exceptTime: '',
         reason: '',
@@ -170,6 +172,12 @@ export default {
   methods: {
     closeLeaveDialog() {
       this.showLeaveDialog = false
+    },
+    async sendLeaveMessage() {
+      const data = { ...this.ruleForm, userId: this.userInfo.userId, username: this.userInfo.username }
+      console.log(data)
+      const res = await startProcessAPI(data)
+      console.log(res)
     }
   }
 

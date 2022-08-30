@@ -34,7 +34,6 @@ Vue.use(ElementUI, { locale })
 Vue.use(component)
 Vue.mixin(checkPermission)
 Vue.config.productionTip = false
-
 new Vue({
   el: '#app',
   router,
